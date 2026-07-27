@@ -14,24 +14,26 @@ app.set('views', __dirname + '/public/views/');
 // This tells Express out of which directory to serve static assets like CSS and images
 app.use(express.static(__dirname + '/public'));
 
-let backend_url = process.env.BACKEND_URL || "localhost:3000"
+let backend_url = `${process.env.BACKEND_URL}:3000` || "localhost:3000"
+console.log(backend_url);
+
 
 // The homepage route of our application does not interface with the MovieAnalyst API and is always accessible. We won’t use the getAccessToken middleware here. We’ll simply render the index.ejs view.
 app.get('/', function(req, res){
-  // res.render('index', {
-  //   hostname: os.hostname()
-  // });
-  request
-    .get(`http://${backend_url}/`)
-    .end(function(err, data) {
+  res.render('index', {
+    hostname: os.hostname()
+  });
+  // request
+  //   .get(`http://${backend_url}/`)
+  //   .end(function(err, data) {
 
-        // console.dir(data.body, { depth: null, colors: true });
-        res.render('index', { 
-          app_hostname: os.hostname(),
-          api_hostname: data.body.hostname
-        } );
+  //       console.dir(data, { depth: null, colors: true });
+  //       res.render('index', { 
+  //         app_hostname: os.hostname(),
+  //         api_hostname: data.body.hostname
+  //       } );
       
-    })
+  //   })
 })
 
 // For the movies route, we’ll call the getAccessToken middleware to ensure we have an access token. If we do have a valid access_token, we’ll make a request with the superagent library and we’ll be sure to add our access_token in an Authorization header before making the request to our API.
